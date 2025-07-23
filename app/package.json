@@ -12,5 +12,9 @@
   "description": "",
   "devDependencies": {
     "electron": "^37.2.3"
+  },
+  "dependencies": {
+    "jimp": "^1.6.0",
+    "screenshot-desktop": "^1.15.1"
   }
 }
