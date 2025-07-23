@@ -1,0 +1,4 @@
+/puppeteer/node_modules
+/app/node_modules
+/paddleocr2/output
+/paddleocr2/venv
