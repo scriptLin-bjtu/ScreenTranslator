@@ -78,13 +78,17 @@ async function translateText(content, source) {
         console.log("Waiting for new translation result...");
         await pageYD.waitForFunction(
             (lastResultYD) => {
-                const span = document.querySelector(
+                const spans = document.querySelectorAll(
                     "#js_fanyi_output_resultOutput > p > span"
                 );
                 return (
-                    span &&
-                    span.innerText.trim().length > 0 &&
-                    span.innerText.trim() !== lastResultYD
+                    spans &&
+                    Array.from(spans)
+                        .map((span) => span.innerText.trim())
+                        .join("").length > 0 &&
+                    Array.from(spans)
+                        .map((span) => span.innerText.trim())
+                        .join("") !== lastResultYD
                 );
             },
             { timeout: 15000 },
@@ -95,11 +99,15 @@ async function translateText(content, source) {
 
         // Extract result
         result = await pageYD.evaluate(() => {
-            const span = document.querySelector(
+            const spans = document.querySelectorAll(
                 "#js_fanyi_output_resultOutput > p > span"
             );
-            return span ? span.innerText.trim() : null;
+            if (!spans) return null;
+            return Array.from(spans)
+                .map((span) => span.innerText.trim())
+                .join("");
         });
+
         lastResultYD = result;
     }
     if (source == "bing") {

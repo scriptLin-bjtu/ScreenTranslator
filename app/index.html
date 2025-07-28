@@ -1,14 +1,23 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>My Electron App</title>
+    <meta charset="UTF-8" />
+    <title>Main Window</title>
 </head>
 
 <body>
-    <h1>Hello Electron!</h1>
+    <h3>截图ocr翻译平台 快捷键alt+o</h3>
+    <p id="displayText">识别文本...</p>
+    <p id="displayText2">翻译文本...</p>
+
+    <script>
+        // 接收主进程发来的文本
+        window.electronAPI.onShowText((text) => {
+            document.getElementById("displayText").innerText = text.ocr;
+            document.getElementById("displayText2").innerText = text.translate;
+        });
+    </script>
 </body>
 
 </html>
