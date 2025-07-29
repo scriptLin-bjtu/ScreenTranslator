@@ -2,8 +2,23 @@
   "name": "app",
   "version": "1.0.0",
   "main": "main.js",
+  "build": {
+    "appId": "com.example.ScreenTranslater",
+    "productName": "ScreenTranslater",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "**/*"
+    ]
+  },
   "scripts": {
     "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,7 +26,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "electron": "^37.2.3"
+    "electron": "^37.2.3",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "chrome-launcher": "^1.2.0",

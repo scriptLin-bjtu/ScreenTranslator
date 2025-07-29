@@ -11,6 +11,10 @@ wechat dll不合法
 目前采用puppeteer访问有道/必应翻译的操作
 localhost:8888/translate
 {content:string,source:<"youdao"|"bing">}
+
+智谱GLM 4.1V视觉模型
+ocr+翻译
+
 界面：
 electron
 
@@ -22,4 +26,3 @@ To Do List:
 集成到electron里
 ——1.electron可视化界面
 ——2.一个快捷键实现打开截图+翻译窗口
-
