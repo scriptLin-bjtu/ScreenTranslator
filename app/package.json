@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "build": {
-    "appId": "com.example.ScreenTranslater",
-    "productName": "ScreenTranslater",
+    "appId": "com.example.ScreenTranslator",
+    "productName": "ScreenTranslator",
     "directories": {
       "output": "dist"
     },

@@ -3,6 +3,7 @@ const { uIOhook, UiohookKey } = require("uiohook-napi");
 const { Jimp } = require("jimp");
 const fs = require("fs");
 const path = require("path");
+const { app } = require("electron");
 
 let cutmode = false;
 let waitend = false;
@@ -111,7 +112,9 @@ async function cutAndMerge({ x, y, width, height }) {
         });
 
         // 保存裁剪结果
-        const outputPath = path.join(__dirname, "cropped-region.png");
+        //const outputPath = path.join(__dirname, "cropped-region.png");//开发环境
+        const userDataDir = app.getPath("userData");
+        const outputPath = path.join(userDataDir, "cropped-region.png"); //打包环境
         await cropped.write(outputPath);
         console.log("image saved:", outputPath);
     } catch (err) {

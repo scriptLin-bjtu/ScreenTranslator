@@ -2,10 +2,12 @@ const fs = require("fs/promises");
 const path = require("path");
 const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./config");
+const { app } = require("electron");
 
 async function traditionalTranslate(
     alert,
-    imagePath = path.join(__dirname, "cropped-region.png")
+    //imagePath = path.join(__dirname, "cropped-region.png")
+    imagePath = path.join(app.getPath("userData"), "cropped-region.png")
 ) {
     try {
         let source = localStorage.getItem("translateServer") || "youdao";
@@ -77,7 +79,9 @@ async function traditionalTranslate(
 async function VLMtranslate(alert) {
     let apikey = localStorage.getItem("apikey") || "";
     const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-    const imageBuffer = await fs.readFile(path.resolve("cropped-region.png"));
+    const imageBuffer = await fs.readFile(
+        path.join(app.getPath("userData"), "cropped-region.png") //path.join(__dirname, "cropped-region.png")
+    );
     const base64ImageData = `data:image/png;base64,${imageBuffer.toString(
         "base64"
     )}`;
