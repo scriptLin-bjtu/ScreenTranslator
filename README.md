@@ -6,6 +6,10 @@
 
 An Electron-based screen translation tool that combines OCR and translation services.
 
+![show1](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen01.png)
+![show2](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen02.png)
+![show3](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen03.png)
+
 ## Features
 
 - Screen capture and region selection
