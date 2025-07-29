@@ -1,6 +1,6 @@
 # ScreenTranslator
 
-中文
+[中文](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/CNREADME.md)
 
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
