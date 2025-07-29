@@ -6,6 +6,10 @@
 
 基于Electron的屏幕翻译工具，结合OCR和翻译服务。
 
+![show1](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen01.png)
+![show2](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen02.png)
+![show3](https://github.com/scriptLin-bjtu/ScreenTranslator/blob/master/screen03.png)
+
 ## 功能特点
 
 - 屏幕截图和区域选择
