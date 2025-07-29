@@ -26,12 +26,22 @@
         .banner {
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
 
         .dialog {
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+
+        #console {
+            border: 1px solid grey;
+            width: 40vw;
+            height: 5vh;
+            padding: 10px;
+            color: lightslategray;
+            overflow: auto;
         }
     </style>
 </head>
@@ -57,6 +67,8 @@
                         <option value="youdao" selected>有道翻译</option>
                         <option value="bing">必应翻译</option>
                     </select>
+                    <span
+                        style="font-size: x-small;">注:如选择大模型翻译模式需要配置apikey(智谱清言开发者中心免费获取),如果选择传统翻译需要保证系统里有谷歌内核浏览器并且配置好ocr服务文件路径</span>
                     <div>
                         <button id="confirm">应用</button>
                         <button onclick="document.getElementById('myDialog').close()">关闭</button>
@@ -68,7 +80,9 @@
                 配置
             </button>
         </div>
+        <div id="console">
 
+        </div>
     </div>
     <div class="container">
         <div class="item">
@@ -95,7 +109,7 @@
         });
 
         window.electronAPI.onConsole((text) => {
-            console.log(text);
+            document.getElementById('console').innerText = text;
         })
 
         document.querySelector('#confirm').addEventListener('click', () => {

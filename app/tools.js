@@ -9,13 +9,14 @@ let waitend = false;
 let startPoint = { x: 0, y: 0 };
 let endPoint = { x: 0, y: 0 };
 
-function moniter(openfunc, closefunc, processfunc, key = UiohookKey.O) {
+function moniter(openfunc, closefunc, processfunc, alert, key = UiohookKey.O) {
     uIOhook.on("keydown", (e) => {
         if (e.keycode === key && e.altKey) {
             cutmode = !cutmode;
             waitend = false;
             cutmode ? openfunc() : closefunc();
             console.log("cutmode:", cutmode);
+            alert("截屏模式:" + cutmode);
         }
     });
     uIOhook.on("mousedown", (e) => {
@@ -47,7 +48,9 @@ function moniter(openfunc, closefunc, processfunc, key = UiohookKey.O) {
                         ? Math.abs(endPoint.y - startPoint.y)
                         : Math.abs(startPoint.y),
             });
+            alert("截图成功,正在处理");
             await processfunc();
+            alert("处理成功");
         }
     });
     uIOhook.start();

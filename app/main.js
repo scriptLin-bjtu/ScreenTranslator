@@ -80,13 +80,25 @@ function closeOverlayWindows() {
 
 app.whenReady().then(() => {
     createMainWindow();
-    moniter(createOverlayWindows, closeOverlayWindows, async () => {
-        const translateObj =
-            mode == 1
-                ? await traditionalTranslate()
-                : await VLMtranslate(apikey);
-        mainWindow.webContents.send("show-text", translateObj);
-    });
+    mainWindow.webContents.send("console", "初始化成功");
+    moniter(
+        createOverlayWindows,
+        closeOverlayWindows,
+        async () => {
+            const translateObj =
+                mode == 1
+                    ? await traditionalTranslate((text) => {
+                          mainWindow.webContents.send("console", text);
+                      })
+                    : await VLMtranslate((text) => {
+                          mainWindow.webContents.send("console", text);
+                      });
+            mainWindow.webContents.send("show-text", translateObj);
+        },
+        (text) => {
+            mainWindow.webContents.send("console", text);
+        }
+    );
 
     ipcMain.on("close-overlay-windows", () => {
         console.log("recieve cut");
@@ -114,6 +126,8 @@ app.whenReady().then(() => {
         localStorage.setItem("apikey", apikey);
         localStorage.setItem("ocrfilepath", ocrfilepath);
         localStorage.setItem("translateServer", translateServer);
+
+        mainWindow.webContents.send("console", "配置修改成功");
     });
 
     ipcMain.handle("getConfig", async () => {

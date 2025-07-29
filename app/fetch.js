@@ -1,10 +1,14 @@
 const fs = require("fs/promises");
 const path = require("path");
+const { LocalStorage } = require("node-localstorage");
+const localStorage = new LocalStorage("./config");
 
 async function traditionalTranslate(
+    alert,
     imagePath = path.join(__dirname, "cropped-region.png")
 ) {
     try {
+        let source = localStorage.getItem("translateServer") || "youdao";
         const fileContent = await fs.readFile(imagePath);
         const filename = path.basename(imagePath);
 
@@ -29,6 +33,7 @@ async function traditionalTranslate(
         });
 
         if (!ocrResponse.ok) {
+            alert("错误:ocr识别失败");
             throw new Error(`OCR 请求失败，状态码: ${ocrResponse.status}`);
         }
 
@@ -36,6 +41,7 @@ async function traditionalTranslate(
         const extractedText =
             ocrResult?.results?.map((i) => i.text).join(" ") || "";
         console.log("OCR result:", extractedText);
+        alert("ocr识别成功");
 
         const translateResponse = await fetch(
             "http://localhost:8888/translate",
@@ -44,7 +50,7 @@ async function traditionalTranslate(
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     content: extractedText,
-                    source: "youdao",
+                    source: source,
                 }),
             }
         );
@@ -57,6 +63,7 @@ async function traditionalTranslate(
 
         const translateResult = await translateResponse.json();
         console.log("translate result:\n", translateResult);
+        alert("翻译成功");
         return {
             origin: extractedText,
             translate: translateResult.result,
@@ -64,9 +71,11 @@ async function traditionalTranslate(
         };
     } catch (err) {
         console.error("请求出错:", err);
+        alert("错误" + err);
     }
 }
-async function VLMtranslate(key) {
+async function VLMtranslate(alert) {
+    let apikey = localStorage.getItem("apikey") || "";
     const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
     const imageBuffer = await fs.readFile(path.resolve("cropped-region.png"));
     const base64ImageData = `data:image/png;base64,${imageBuffer.toString(
@@ -109,18 +118,21 @@ async function VLMtranslate(key) {
     const options = {
         method: "POST",
         headers: {
-            Authorization: "Bearer " + key,
+            Authorization: "Bearer " + apikey,
             "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
     };
 
     try {
+        alert("请求大模型...");
         const response = await fetch(url, options);
         const data = await response.json();
         const message = data.choices?.[0]?.message?.content;
+        alert("大模型解析成功");
         return JSON.parse(message);
     } catch (error) {
+        alert("错误" + error);
         console.error(error);
     }
 }
