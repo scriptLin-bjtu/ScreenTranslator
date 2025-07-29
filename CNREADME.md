@@ -1,6 +1,6 @@
 # 屏幕翻译工具
 
-English
+[English](https://github.com/scriptLin-bjtu/ScreenTranslator?tab=readme-ov-file)
 
 [![许可证: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
