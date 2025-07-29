@@ -4,19 +4,122 @@
 <head>
     <meta charset="UTF-8" />
     <title>Main Window</title>
+    <style>
+        .container {
+            display: flex;
+            gap: 2vh;
+            justify-content: space-between;
+        }
+
+        .item {
+            border: 1px solid green;
+            width: 30vw;
+            height: 80vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .item>span {
+            color: grey;
+        }
+
+        .banner {
+            display: flex;
+            align-items: center;
+        }
+
+        .dialog {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
 </head>
 
 <body>
-    <h3>截图ocr翻译平台 快捷键alt+o</h3>
-    <p id="displayText">识别文本...</p>
-    <p id="displayText2">翻译文本...</p>
+    <div class="banner">
+        <h3>截图ocr翻译平台 快捷键alt+o
+        </h3>
+        <div>
+            <dialog id="myDialog">
+                <div class="dialog">
+                    <label for="modeselect">翻译模式</label>
+                    <select id="modeselect">
+                        <option value="mode1" selected>传统翻译</option>
+                        <option value="mode2">大模型翻译</option>
+                    </select>
+                    <label for="apikey">api key</label>
+                    <input id="apikey" placeholder="智谱api密钥" />
+                    <label for="ocrfilepath">ocr服务文件路径</label>
+                    <input id="ocrfilepath" placeholder="ocr服务文件路径" />
+                    <label for="translateServer">翻译源</label>
+                    <select id="translateServer">
+                        <option value="youdao" selected>有道翻译</option>
+                        <option value="bing">必应翻译</option>
+                    </select>
+                    <div>
+                        <button id="confirm">应用</button>
+                        <button onclick="document.getElementById('myDialog').close()">关闭</button>
+                    </div>
+                </div>
+
+            </dialog>
+            <button id="config">
+                配置
+            </button>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="item">
+            <span>源文本:</span>
+            <div id="displayText"></div>
+        </div>
+        <div class="item">
+            <span>翻译结果:</span>
+            <div id="displayText2"></div>
+        </div>
+        <div class="item">
+            <span>知识点:</span>
+            <div id="displayText3"></div>
+        </div>
+    </div>
+
 
     <script>
         // 接收主进程发来的文本
-        window.electronAPI.onShowText((text) => {
-            document.getElementById("displayText").innerText = text.ocr;
-            document.getElementById("displayText2").innerText = text.translate;
+        window.electronAPI.onShowText((textobj) => {
+            document.getElementById("displayText").innerText = textobj.origin;
+            document.getElementById("displayText2").innerText = textobj.translate;
+            document.getElementById("displayText3").innerText = textobj.knowledge;
         });
+
+        window.electronAPI.onConsole((text) => {
+            console.log(text);
+        })
+
+        document.querySelector('#confirm').addEventListener('click', () => {
+            const obj = {
+                mode: document.querySelector('#modeselect').value,
+                apikey: document.querySelector('#apikey').value,
+                ocrfilepath: document.querySelector('#ocrfilepath').value,
+                translateServer: document.querySelector('#translateServer').value,
+            }
+            window.electronAPI.sendConfig(obj);
+            document.getElementById('myDialog').close();
+        });
+
+        document.querySelector('#config').addEventListener('click', async () => {
+            const dialog = document.getElementById("myDialog");
+            const config = await window.electronAPI.getConfig();
+            console.log("Received config:", config);
+            document.querySelector('#modeselect').value = `mode${config.mode}`;
+            document.querySelector('#apikey').value = config.apikey;
+            document.querySelector('#ocrfilepath').value = config.ocrfilepath;
+            document.querySelector('#translateServer').value = config.translateServer;
+            dialog.showModal();
+        })
+
     </script>
 </body>
 

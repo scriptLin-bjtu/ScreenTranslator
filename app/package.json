@@ -14,7 +14,11 @@
     "electron": "^37.2.3"
   },
   "dependencies": {
+    "chrome-launcher": "^1.2.0",
+    "express": "^5.1.0",
     "jimp": "^1.6.0",
+    "node-localstorage": "^3.0.5",
+    "puppeteer-core": "^24.15.0",
     "screenshot-desktop": "^1.15.1",
     "uiohook-napi": "^1.5.4"
   }

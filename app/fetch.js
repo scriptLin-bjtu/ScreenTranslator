@@ -1,13 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { createReadStream } = require("fs");
 
-/**
- * 执行 OCR 并翻译指定图片文件
- * @param {string} imagePath - 图片路径，默认使用当前目录下的 "cropped-region.png"
- * @returns {Promise<void>}
- */
-async function processImage(
+async function traditionalTranslate(
     imagePath = path.join(__dirname, "cropped-region.png")
 ) {
     try {
@@ -63,10 +57,72 @@ async function processImage(
 
         const translateResult = await translateResponse.json();
         console.log("translate result:\n", translateResult);
-        return { ocr: extractedText, translate: translateResult.result };
+        return {
+            origin: extractedText,
+            translate: translateResult.result,
+            knowledge: "",
+        };
     } catch (err) {
         console.error("请求出错:", err);
     }
 }
+async function VLMtranslate(key) {
+    const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+    const imageBuffer = await fs.readFile(path.resolve("cropped-region.png"));
+    const base64ImageData = `data:image/png;base64,${imageBuffer.toString(
+        "base64"
+    )}`;
 
-module.exports = { processImage };
+    const body = {
+        model: "glm-4.1v-thinking-flash",
+        do_sample: true,
+        stream: false,
+        thinking: { type: "enabled" },
+        temperature: 0.8,
+        top_p: 0.7,
+        max_tokens: 16000,
+        tool_choice: "auto",
+        response_format: { type: "json_object" },
+        messages: [
+            {
+                role: "user",
+                content: [
+                    {
+                        type: "image_url",
+                        image_url: {
+                            url: base64ImageData,
+                        },
+                    },
+                    {
+                        type: "text",
+                        text:
+                            "这是一个用户截图的内容，请你提取里面的文字信息，返回json格式，要求三个字符串属性:" +
+                            "1.origin:提取的原始文字信息。" +
+                            "2.translate:翻译润色成中文后的信息。" +
+                            "3.knowledge:原文中重点词语或用法的解释，从语言学习的角度",
+                    },
+                ],
+            },
+        ],
+    };
+
+    const options = {
+        method: "POST",
+        headers: {
+            Authorization: "Bearer " + key,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        const message = data.choices?.[0]?.message?.content;
+        return JSON.parse(message);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+module.exports = { traditionalTranslate, VLMtranslate };
