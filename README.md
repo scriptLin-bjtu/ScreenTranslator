@@ -1,28 +1,113 @@
-技术选型：
-ocr:
-弃用Tesseract.js 识别效果差
-弃用easyocr 体积太大
-paddleocr(打包的问题:https://github.com/PaddlePaddle/PaddleOCR/discussions/11490)采用
-loacalhost:6987:ocr
-formdata{image:imagefile}
-Windows: python -m venv venv 并激活 venv\Scripts\activate
-wechat dll不合法
-翻译 api:vercel deepl x
-目前采用puppeteer访问有道/必应翻译的操作
-localhost:8888/translate
-{content:string,source:<"youdao"|"bing">}
+# ScreenTranslator
 
-智谱GLM 4.1V视觉模型
-ocr+翻译
+中文
 
-界面：
-electron
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+
+An Electron-based screen translation tool that combines OCR and translation services.
+
+## Features
+
+- Screen capture and region selection
+- Text recognition using PaddleOCR
+- Translation services (Youdao/Bing)
+- VLM Translation (GLM-4.1V-flash)
+- Hotkey support for quick access
+- Cross-platform support (Windows/macOS/Linux)
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 16+
+- Python 3.7+
+- Git
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/ScreenTranslator.git
+cd ScreenTranslator
+```
+
+2. Set up Python environment (for OCR service):
+```bash
+cd paddleocr2
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/macOS
+pip install paddlepaddle paddleocr flask pillow
+```
+
+3. Install Node.js dependencies:
+```bash
+cd ../app
+npm install
+```
+
+### Running the Application
+
+1. Start the OCR service (in one terminal):
+```bash
+cd paddleocr2
+python main.py
+```
+
+2. Start the Electron app (in another terminal):
+```bash
+cd app
+npm start
+```
+
+## Usage
+
+- Press the configured hotkey to capture screen region
+- Selected text will be automatically recognized and translated
+- Choose between traditional or VLM mode
+
+## Configuration
+
+### OCR Settings
+
+Edit `paddleocr2/main.py` to modify:
+- OCR language settings
+- Server port (default: 6987)
+
+### Translation Settings
+
+Edit `app/config/translateServer` to change:
+- Default translation service
+- API endpoints
+
+## Development
+
+### Project Structure
+
+- `app/`: Electron application (frontend)
+  - `main.js`: Main process
+  - `puppeteer.js`: Translation handling
+  - `tools.js`: Utility functions
+- `paddleocr2/`: OCR service (backend)
+  - `main.py`: Flask server with PaddleOCR
+
+### Building for Production
+
+```bash
+cd app
+npm run dist
+```
+
+## Notice
+
+1. About PaddleOCR service packaging issues, please refer to: [PaddleOCR Discussion #11490](https://github.com/PaddlePaddle/PaddleOCR/discussions/11490)
+2. If using traditional translation mode, you need to download OCR service files and configure the OCR file path in the software. If using large model translation mode, you need to configure the [API key](https://bigmodel.cn/console/overview) in the software.
 
 
-To Do List:
-7.21
-优化orc时间，也许采用两个模型（一个一般的识别，一个针对手写体识别）
-寻找翻译技术选型
-集成到electron里
-——1.electron可视化界面
-——2.一个快捷键实现打开截图+翻译窗口
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+ISC © [ScriptLin]
